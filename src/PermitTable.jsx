@@ -64,81 +64,73 @@ const PermitTable = () => {
     });
   };
 
-  useEffect(() => {
-    getData();
-  }, []);
+  const styles = {
+    container: {
+      display: "flex",
+      flexDirection: "column",
+      margin: "32px",
+      backgroundColor: "#fff",
+      padding: "16px",
+      borderRadius: "16px",
+      height: "90vh",
+      alignItems: "stretch",
+      boxShadow: "0px 4px 5px rgba(0, 0, 0, 0.08), 0px 0.500862px 0.626078px rgba(0, 0, 0, 0.04)"
+    },
+    tableContainer: {
+      display: "flex",
+      flex: "1 1 auto",
+      overflow: "auto",
+      flexDirection: "column",
+    },
+    searchContainer: {
+      display: "flex",
+      flexDirection: "column",
+      flex: "0 1 auto",
+    },
+    button: {
+      padding: "8px 16px",
+      backgroundColor: "#414142",
+      color: "white",
+      fontWeight: "600"
+    }
+  };
 
   return (
-    <>
-      <textarea
-        style={{ width: "100vw", padding: "8px", margin: "12px 0" }}
-        value={rawQuery}
-        onChange={(e) => setRawQuery(e.target.value)}
-      ></textarea>
-      <button onClick={() => submitQuery()}>Run Query</button>
-      <div style={{ display: "flex", flexDirection: "row" }}>
-        <div
-          style={{
-            borderRadius: "8px",
-            padding: "16px 24px",
-            cursor: "pointer",
-            color: "#414142",
-            border: "1px solid #414142"
-          }}
-          onClick={() => prevPage()}
-        >
-          {"<"}
-        </div>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            textAlign: "center",
-            padding: "0 16px"
-          }}
-        >
-          Page: {offset / limit + 1} of {Math.round(recordCount / limit)}
-          <br />
-          Records: {data?.length}
-          <br />
-          Total: {recordCount}
-        </div>
-        <div
-          style={{
-            borderRadius: "8px",
-            padding: "16px 24px",
-            cursor: "pointer",
-            color: "#414142",
-            border: "1px solid #414142"
-          }}
-          onClick={() => nextPage()}
-        >
-          {">"}
-        </div>
+    <div style={styles.container}>
+      <div style={styles.searchContainer}>
+        <textarea
+          style={{ padding: "8px", margin: "12px" }}
+          value={rawQuery}
+          onChange={(e) => setRawQuery(e.target.value)}
+        ></textarea>
+        <button style={styles.button} onClick={() => submitQuery()}>Run Query</button>
       </div>
-      <div style={{display: "flex", justifyContent: "center", alignItems: "center" width: "100vw", height: "auto"}}>
-      <table style={{ paddingTop: "24px" }}>
-        <thead>
-          <tr>
-            {columns.map((col, idx) => {
-              return <th key={idx}>{col}</th>;
+      <div>
+        <h3>Results</h3>
+      </div>
+      <div style={styles.tableContainer}>
+        <table style={{ paddingTop: "24px" }}>
+          <thead>
+            <tr>
+              {columns.map((col, idx) => {
+                return <th key={idx}>{col}</th>;
+              })}
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((row, idx) => {
+              return (
+                <tr key={idx}>
+                  {Object.values(row).map((key, value) => {
+                    return <td key={value} style={!key ? {color: "#cfcfcf"} : {color: "black"}}>{key ?? '[null]'}</td>;
+                  })}
+                </tr>
+              );
             })}
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((row, idx) => {
-            return (
-              <tr key={idx}>
-                {Object.values(row).map((key, value) => {
-                  return <td key={value}>{key}</td>;
-                })}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+          </tbody>
+        </table>
       </div>
-    </>
+    </div>
   );
 };
 
